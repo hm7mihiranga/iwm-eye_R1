@@ -11,8 +11,8 @@ from imblearn.metrics import sensitivity_specificity_support
 import os
 
 ####
-IMAGE_PATH = 'examples/02_dr.JPG'
-GROUND_TRUTH_PATH = 'examples/02_dr.tif'
+IMAGE_PATH = 'examples/01_dr.JPG'
+GROUND_TRUTH_PATH = 'examples/01_dr.tif'
 OUTPUT_DIR = 'output/'
 ####
 
@@ -22,12 +22,14 @@ def remove_small_elements(image: np.ndarray, min_size: int) -> np.ndarray:
         image, connectivity=8)
 
     sizes = stats[1:, -1]
+    width = stats[1:, -3]
+    height = stats[1:, -2]
     components -= 1
 
     result = np.zeros((output.shape))
 
     for i in range(0, components):
-        if sizes[i] >= min_size:
+        if sizes[i] >= min_size and (width[i] > 150 or height[i] > 150):
             result[output == i + 1] = 255
 
     return result
@@ -57,7 +59,7 @@ def process_input(path: str) -> np.ndarray:
     clahe = cv.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
     equalized = clahe.apply(gray_image)
 
-    denoised = cv.fastNlMeansDenoising(equalized, None, 15, 25, 25)
+    denoised = cv.fastNlMeansDenoising(equalized, None, 15)
     vessels = normalize(frangi(denoised), 255).astype(np.uint8)
     _, thresh = cv.threshold(vessels, 0, 255, cv.THRESH_BINARY)
     small_removed = remove_small_elements(thresh, 800).astype(np.uint8)
