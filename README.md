@@ -18,3 +18,28 @@ Directory `image_processing` contains python script that uses image processing a
 - thresholding
 - removing small elements (`connected components with stats`)
 - removing border (based on black color in hsv)
+
+## Method 2 - Machine Learning
+Directory `machine_learning` contains jupyter notebook that uses machine learning approach. Basically we can distinguish five stages of processing.
+
+### Pre-processing
+- image resizing
+
+### Feature extraction
+- dividing image into small windows (`view_as_windows`)
+- calculating RGB mean, RGB standard deviation and image moments for each window - x values
+- deciding whether center of window contains vessel (255) or not (0) - y values
+
+### Learning
+- undersampling of background class
+- splitting data (`train_test_split`)
+- using random forest
+- tuning hyper-parameters (`RandomizedSearchCV`)
+- evaluating model accuracy
+
+### Classification
+- using prepared model to detect vessels in windows
+
+### Post-processing
+- building image from windows and predicted labels
+- removing small elements (`connected components with stats`) to improve quality
