@@ -1,0 +1,7 @@
+opencv-python
+scikit-image
+scikit-learn
+imbalanced-learn
+numpy
+pandas
+matplotlib
